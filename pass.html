@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resitation Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="timetabke.css">
+   
+      
+</head>
+<body>
+    <header class="text-center p-3">
+        <img src="https://www.amts.co.in/images/logonew.png" alt="AMTS Logo" class="img-fluid"
+            style="max-width: 750px;">
+    </header>
+    <div class="container">
+        
+        <h2 class="text-center">pass registration </h2>
+        <form id="resitrationForm">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Photo Upload</label>
+                <input type="file" class="form-control" id="photo" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Source Station</label>
+                <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Destination Station</label>
+                <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Pass Start Date</label>
+                <input type="date" class="form-control" id="startDate" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Valid Till Date</label>
+                <input type="date" class="form-control" id="validDate" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Total Valid Days</label>
+                <input type="text" class="form-control" id="totalDays" readonly>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div class="card-container" id="passCard">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title" id="passName"></h5>
+                    <img id="passPhoto" src="" class="img-thumbnail" width="100" height="100">
+                    <p class="card-text">Pass ID: <span id="passId"></span></p>
+                    <p class="card-text">Valid Till: <span id="passValidDate"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("startDate").addEventListener("change", calculateDays);
+        document.getElementById("validDate").addEventListener("change", calculateDays);
+        function calculateDays() {
+            let startDate = new Date(document.getElementById("startDate").value);
+            let validDate = new Date(document.getElementById("validDate").value);
+            if (startDate && validDate && validDate > startDate) {
+                let diffTime = validDate - startDate;
+                let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById("totalDays").value = diffDays + " days";
+            } else {
+                document.getElementById("totalDays").value = "";
+            }
+        }
+        document.getElementById("resitationForm").addEventListener("submit", function(event) {
+            event.preventDefault(); 
+            let name = document.getElementById("name").value;
+            let photo = document.getElementById("photo").files[0];
+            let validDate = document.getElementById("validDate").value;
+            let passId = "PASS-" + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById("passName").innerText = name;
+            document.getElementById("passValidDate").innerText = validDate;
+            document.getElementById("passId").innerText = passId;
+            if (photo) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("passPhoto").src = e.target.result;
+                }
+                reader.readAsDataURL(photo);
+            }
+            document.getElementById("passCard").style.display = "block";
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
